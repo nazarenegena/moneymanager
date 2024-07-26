@@ -1,4 +1,4 @@
-import Sidebar from "@/components/sections/Sidebar";
+import Sidebar from "@/components/sidebar/Sidebar";
 
 export default function DashboardLayout({
   children, // will be a page or nested layout

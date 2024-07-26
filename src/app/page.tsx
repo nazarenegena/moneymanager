@@ -1,8 +1,8 @@
-import LandingPage from "@/components/sections/LandingPage";
+import LandingPage from "@/components/accountform/LandingPage";
 
 export default function Home() {
   return (
-    <div className="px-10 pt-10">
+    <div className="h-screen">
       <LandingPage />
     </div>
   );
