@@ -88,7 +88,7 @@ const CreateBankAccountForm = (props: Props) => {
           className={`${inputStyles}`}
           required
         />
-        <button className="bg-black text-white text-md lg:h-10 h-8 lg:w-80 w-60 rounded-md mt-9 hover:bg-cyan-500 shadow-sm focus:outline-none focus:ring-4 focus:ring-cyan-300">
+        <button className="bg-black text-white text-md lg:h-10 h-8 lg:w-80 w-60 rounded-md mt-9 hover:bg-cyan-600 shadow-sm focus:outline-none focus:ring-4 focus:ring-cyan-300">
           <Link href={"/dashboard"}> Create Account</Link>
         </button>
       </form>

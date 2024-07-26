@@ -8,7 +8,7 @@ type Props = {};
 const LandingPage = (props: Props) => {
   return (
     <div className="grid grid-cols-2 h-full">
-      <div className="lg:bg-cyan-500 bg-slate-500 flex justify-center">
+      <div className=" bg-gray-500 flex justify-center">
         <Image
           src={MobilePayment}
           alt="mobileappsvg"
