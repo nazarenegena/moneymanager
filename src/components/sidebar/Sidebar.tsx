@@ -15,12 +15,12 @@ const Sidebar = (props: Props) => {
   const pathname = usePathname();
 
   const sidebarComponentsStyles =
-    "my-7 font-medium text-md text-zinc-600 hover hover:bg-gray-100 h-12 pl-4 py-3 rounded-md flex items-center";
+    "my-5 font-medium text-md text-zinc-600 hover hover:bg-gray-100 h-12 pl-4  rounded-md flex items-center";
   return (
-    <div className="flex flex-col bg-white ml-2 px-2 pt-20 rounded-md mt-6">
+    <div className="flex flex-col bg-white ml-2 px-2 pt-10 rounded-md mt-7">
       <Link
         href="/"
-        className="font-mono font-semibold text-cyan-600 pl-4 text-xl leading-4"
+        className="font-mono font-semibold text-cyan-600 mt-7 text-xl leading-4"
       >
         MoneyManager
       </Link>
@@ -28,7 +28,7 @@ const Sidebar = (props: Props) => {
         href="/dashboard"
         className={`${sidebarComponentsStyles} ${
           pathname === "/dashboard" ? "bg-gray-200 " : null
-        } mt-20 `}
+        } mt-16 `}
       >
         <FaHome className="mr-4" size={20} />
         Dashboard
