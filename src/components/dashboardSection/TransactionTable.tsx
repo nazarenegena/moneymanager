@@ -50,26 +50,26 @@ const transactionData: ITransaction[] = [
     debit: true,
   },
   {
-    date: "2024-07-21",
+    date: "2024-07-13",
     accountNumber: "KW81 CBK5 0063 7845 9406",
     recipient: "John_W",
     amount: " - $ 5000",
     debit: false,
   },
-  {
-    date: "2024-07-20",
-    accountNumber: "BT14 0128 5272 5102 0012",
-    recipient: "Alex_M",
-    amount: " + $ 3000",
-    debit: true,
-  },
-  {
-    date: "2024-07-23",
-    accountNumber: "JW91 0063 7845 9406 CBK5",
-    recipient: "Milan_K",
-    amount: " - $ 1200",
-    debit: false,
-  },
+  //   {
+  //     date: "2024-07-20",
+  //     accountNumber: "BT14 0128 5272 5102 0012",
+  //     recipient: "Alex_M",
+  //     amount: " + $ 3000",
+  //     debit: true,
+  //   },
+  //   {
+  //     date: "2024-07-23",
+  //     accountNumber: "JW91 0063 7845 9406 CBK5",
+  //     recipient: "Milan_K",
+  //     amount: " - $ 1200",
+  //     debit: false,
+  //   },
 ];
 const columnHelper = createColumnHelper<ITransaction>();
 const columns = [

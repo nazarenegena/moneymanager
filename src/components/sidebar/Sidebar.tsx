@@ -17,10 +17,10 @@ const Sidebar = (props: Props) => {
   const sidebarComponentsStyles =
     "my-5 font-medium text-md text-zinc-600 hover hover:bg-gray-100 h-12 pl-4  rounded-md flex items-center";
   return (
-    <div className="flex flex-col bg-white ml-2 px-2 pt-10 rounded-md mt-7">
+    <div className="flex flex-col bg-white ml-2 px-2 pt-10 rounded-md mt-4">
       <Link
         href="/"
-        className="font-mono font-semibold text-cyan-600 mt-7 text-xl leading-4"
+        className="font-mono font-semibold text-cyan-600 mt-7 pl-5 text-xl tracking-wider"
       >
         MoneyManager
       </Link>
@@ -34,15 +34,6 @@ const Sidebar = (props: Props) => {
         Dashboard
       </Link>
       <Link
-        href="/dashboard/transactions"
-        className={`${sidebarComponentsStyles} ${
-          pathname === "/dashboard/transactions" ? "bg-gray-200 " : null
-        }`}
-      >
-        <GrTransaction className="mr-4" size={20} />
-        Transactions
-      </Link>
-      <Link
         href="/dashboard/transfer"
         className={`${sidebarComponentsStyles} ${
           pathname === "/dashboard/transfer" ? "bg-gray-200 " : null
@@ -51,6 +42,16 @@ const Sidebar = (props: Props) => {
         <TiArrowSync className="mr-4" size={20} />
         Transfer
       </Link>
+      <Link
+        href="/dashboard/transactions"
+        className={`${sidebarComponentsStyles} ${
+          pathname === "/dashboard/transactions" ? "bg-gray-200 " : null
+        }`}
+      >
+        <GrTransaction className="mr-4" size={20} />
+        Transactions
+      </Link>
+
       <Link
         href="/dashboard/reports"
         className={`${sidebarComponentsStyles} ${

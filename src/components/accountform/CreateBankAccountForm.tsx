@@ -20,7 +20,7 @@ const CreateBankAccountForm = (props: Props) => {
     "lg:h-10 h-8  lg:w-80 w-60 px-2 border border-zinc-200 text-gray-900 text-sm rounded-md outline-none focus:ring-cyan-500 focus:border-cyan-500";
   return (
     <div className="flex flex-col justify-center relative">
-      <p className="absolute  lg:top-10 top-0 lg:right-14 right-0 lg:text-lg text-sm font-mono font-semibold text-cyan-600 leading-10">
+      <p className="absolute  lg:top-10 top-0 lg:right-14 right-0 lg:text-lg text-sm font-mono font-semibold text-cyan-600 tracking-widest">
         MoneyManager
       </p>
 
@@ -88,7 +88,7 @@ const CreateBankAccountForm = (props: Props) => {
           className={`${inputStyles}`}
           required
         />
-        <button className="bg-black text-white text-md lg:h-10 h-8 lg:w-80 w-60 rounded-md mt-9 hover:bg-cyan-600 shadow-sm focus:outline-none focus:ring-4 focus:ring-cyan-300">
+        <button className="bg-black/95 text-white text-md lg:h-10 h-8 lg:w-80 w-60 rounded-md mt-9 hover:bg-cyan-600 shadow-sm focus:outline-none focus:ring-4 focus:ring-cyan-300">
           <Link href={"/dashboard"}> Create Account</Link>
         </button>
       </form>
