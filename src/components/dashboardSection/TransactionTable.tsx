@@ -7,6 +7,8 @@ import {
 } from "@tanstack/react-table";
 
 import React, { useState } from "react";
+import Image from "next/image";
+import profileImage from "@/app/assets/profile-img.jpg";
 
 type Props = {};
 
@@ -15,66 +17,115 @@ interface ITransaction {
   accountNumber: string;
   recipient: string;
   amount: string;
+  debit: boolean;
 }
 
 const transactionData: ITransaction[] = [
   {
     date: "2024-05-12",
     accountNumber: "AL47 2121 1009 3569 8711",
-    recipient: "James",
-    amount: " + USD 5000",
+    recipient: "James_A",
+    amount: " + $ 5000",
+    debit: true,
   },
   {
     date: "2024-05-19",
     accountNumber: "LU28 2801 9406 4475 0003",
-    recipient: "Daisy",
-    amount: " - USD 2000",
+    recipient: "Daisy_K",
+    amount: " - $ 2000",
+    debit: false,
   },
   {
     date: "2024-06-27",
     accountNumber: "CY17 0128 0012 5272 4002",
-    recipient: "Brenda",
-    amount: " + USD 15000",
+    recipient: "Brenda_M",
+    amount: " + $ 15000",
+    debit: true,
   },
   {
     date: "2024-07-10",
     accountNumber: "NO93 8601 1117 0947 0128",
-    recipient: "Peter",
-    amount: " + USD 200,000",
+    recipient: "Peter_J",
+    amount: " + $ 200,000",
+    debit: true,
   },
   {
     date: "2024-07-21",
     accountNumber: "KW81 CBK5 0063 7845 9406",
-    recipient: "James",
-    amount: " - USD 5000",
+    recipient: "John_W",
+    amount: " - $ 5000",
+    debit: false,
+  },
+  {
+    date: "2024-07-20",
+    accountNumber: "BT14 0128 5272 5102 0012",
+    recipient: "Alex_M",
+    amount: " + $ 3000",
+    debit: true,
+  },
+  {
+    date: "2024-07-23",
+    accountNumber: "JW91 0063 7845 9406 CBK5",
+    recipient: "Milan_K",
+    amount: " - $ 1200",
+    debit: false,
   },
 ];
 const columnHelper = createColumnHelper<ITransaction>();
 const columns = [
-  columnHelper.accessor("date", {
-    cell: (info) => info.getValue(),
-    footer: (info) => info.column.id,
-  }),
   columnHelper.accessor("recipient", {
-    header: () => "name",
-    cell: (info) => info.renderValue(),
+    header: () => "Name",
+    // cell: (info) => info.renderValue(),
+    cell: ({ row: { original } }) => {
+      return (
+        <div className="flex  items-center mr-6">
+          <Image
+            src={profileImage}
+            alt="profile-img "
+            width={30}
+            className="mr-3"
+          />
+          {original.recipient}
+        </div>
+      );
+    },
     footer: (info) => info.column.id,
   }),
+
   columnHelper.accessor("accountNumber", {
-    header: () => "account",
+    header: () => "Account No.",
     cell: (info) => info.getValue(),
     footer: (info) => info.column.id,
   }),
 
   columnHelper.accessor("amount", {
-    header: () => "amount",
-    cell: (info) => info.renderValue(),
+    header: () => "Amount",
+    cell: ({ row: { original } }) => {
+      return (
+        <div
+          className={`${
+            original.debit
+              ? "text-green-600 bg-green-100 rounded-full w-32 text-center py-1"
+              : "text-red-600 bg-red-100 rounded-full w-32 text-center py-1"
+          } font-semibold`}
+        >
+          {original.amount}
+        </div>
+      );
+    },
+    footer: (info) => info.column.id,
+  }),
+  columnHelper.accessor("date", {
+    header: () => "Date",
+    cell: (info) => info.getValue(),
     footer: (info) => info.column.id,
   }),
 ];
 
 const TransactionTable = (props: Props) => {
   const [transactions, setTransactions] = useState(() => [...transactionData]);
+  //   console.log(transactions, "the id");
+
   const table = useReactTable({
     data: transactions,
     columns,
@@ -108,7 +159,7 @@ const TransactionTable = (props: Props) => {
           {table.getRowModel().rows.map((row) => (
             <tr
               key={row.id}
-              className="border-b border-gray-200 h-20 font-normal text-sm text-gray-500"
+              className="border-b border-gray-200 h-20 font-medium text-sm text-gray-500"
             >
               {row.getVisibleCells().map((cell) => (
                 <td key={cell.id}>
