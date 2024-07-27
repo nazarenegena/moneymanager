@@ -25,24 +25,26 @@ const CreateBankAccountForm = (props: Props) => {
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    setAccountDetails({
-      accountHolder,
-      country,
-      currency,
-      accountNumber,
-    });
 
-    if (accountDetails?.accountNumber) {
+    if (accountHolder && country && currency && accountNumber) {
+      setAccountDetails({
+        accountHolder,
+        country,
+        currency,
+        accountNumber,
+      });
+
       router.push("/dashboard");
     } else {
       console.log("fill values");
     }
+
+    // Clear the form
     setAccountHolder("");
     setCountry("");
     setCurrency("");
     setAccountNumber("");
   };
-  console.log(accountDetails, "the data ?");
 
   return (
     <div className="flex flex-col justify-center relative">

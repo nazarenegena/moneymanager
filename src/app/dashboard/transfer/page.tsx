@@ -4,10 +4,12 @@ import CashTransactionForm from "@/components/transferSection/CashTransactionFor
 import CheckingAmountCard from "@/components/transferSection/CheckingAmountCard";
 import TransferMoneyForm from "@/components/transferSection/TransferMoneyForm";
 import Modal from "@/components/transferSection/Modal";
+import { useBankAccount } from "@/context/bankAccountContext";
 
 export default function Page() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [transactionType, setTransactionType] = useState("");
+  // const {balance, setBalance,deposit,withdraw } = useBankAccount
 
   const buttonStyles =
     "text-white w-56 h-10 rounded-md cursor-pointer text-md shadow-md";

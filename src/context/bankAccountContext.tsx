@@ -12,10 +12,10 @@ interface BankAccountDetails {
 
 interface BankAccountContextType {
   balance: number;
+  accountDetails: BankAccountDetails | null;
   setBalance: (balance: number) => void;
   deposit: (amount: number) => void;
   withdraw: (amount: number) => void;
-  accountDetails: BankAccountDetails | null;
   setAccountDetails: (details: BankAccountDetails) => void;
 }
 
@@ -35,9 +35,7 @@ interface BankAccountProviderProps {
   children: ReactNode;
 }
 
-export const BankAccountProvider: React.FC<BankAccountProviderProps> = ({
-  children,
-}) => {
+export const BankAccountProvider = ({ children }: BankAccountProviderProps) => {
   const [balance, setBalance] = useState<number>(0);
   const [accountDetails, setAccountDetails] =
     useState<BankAccountDetails | null>(null);
