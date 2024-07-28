@@ -1,54 +1,71 @@
-import React from "react";
+"use client";
+
+import { useState } from "react";
+import { useBankAccount } from "@/context/bankAccountContext";
 
 type Props = {
-  setIsOpen: (isOpen: boolean) => void;
   transactionType: string;
 };
 
-const CashTransactionForm = ({ setIsOpen, transactionType }: Props) => {
-  const handleClose = () => {
-    setIsOpen(false);
+const CashTransactionForm = ({ transactionType }: Props) => {
+  const formStyles = "flex flex-col items-center justify-center h-48 w-80 ";
+  const inputTitleStyle =
+    "text-center text-gray-600 font-semibold tracking-wide";
+  const inputStyles =
+    "mt-6 px-5 text-center h-10 w-auto border border-zinc-200 text-gray-900 shadow-inner text-sm rounded-md outline-none focus:ring-cyan-500 focus:border-cyan-500";
+  const buttonStyle =
+    " mt-10 w-28 border border-green-700 text-green-800 font-semibold bg-green-200  rounded-md mr-3 h-7 cursor-pointer hover:bg-green-400/80";
+  const { balance, deposit, withdraw, setBalance } = useBankAccount();
+  const [amount, setAmount] = useState<number>(0);
+  const [errorMessage, setErrorMessage] = useState<string>("");
+
+  const handleAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setAmount(parseFloat(event.target.value));
+    setErrorMessage("");
+  };
+
+  const handleTransactionSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+    if (transactionType === "deposit") {
+      deposit(amount);
+    } else if (transactionType === "withdraw") {
+      if (amount <= balance) {
+        withdraw(amount);
+      } else {
+        setErrorMessage("Insufficient balance");
+      }
+    }
+    setAmount(0);
   };
 
   return (
     <div>
       {transactionType === "deposit" ? (
-        <form className="flex flex-col justify-center h-48 w-80 ">
-          <p className="text-center text-gray-600 font-semibold tracking-wide">
-            Deposit Money
-          </p>
+        <form onSubmit={handleTransactionSubmit} className={`${formStyles}`}>
+          <p className={`${inputTitleStyle}`}>Deposit Money</p>
           <input
             placeholder="enter amount"
             type="text"
-            className="mt-6 px-5 text-center h-10 w-auto border border-zinc-200 text-gray-900 shadow-inner text-sm rounded-md outline-none focus:ring-cyan-500 focus:border-cyan-500"
+            onChange={handleAmountChange}
+            className={`${inputStyles}`}
           />
-          <div className="flex justify-center mt-10">
-            <button className="w-28 border border-green-700 text-green-800 font-semibold bg-green-200  rounded-md mr-3 h-7 cursor-pointer hover:bg-green-400/80">
-              Deposit
-            </button>
-            <button className="w-28 border border-red-700 text-red-800 font-semibold bg-red-200 rounded-md cursor-pointer hover:bg-red-400/80">
-              Cancel
-            </button>
-          </div>
+          <button className={`${buttonStyle}`}>Deposit</button>
         </form>
       ) : (
-        <form className="flex flex-col justify-center h-48 w-80 ">
-          <p className="text-center text-gray-600 font-semibold tracking-wide">
-            Withdraw Money
-          </p>
+        <form className={`${formStyles}`} onSubmit={handleTransactionSubmit}>
+          <p className={`${inputTitleStyle}`}>Withdraw Money</p>
           <input
             placeholder="enter amount"
             type="text"
-            className="mt-6 px-5 text-center h-10 w-auto border border-zinc-200 text-gray-900 shadow-inner text-sm rounded-md outline-none focus:ring-cyan-500 focus:border-cyan-500"
+            onChange={handleAmountChange}
+            className={`${inputStyles}`}
           />
-          <div className="flex justify-center mt-10">
-            <button className="w-28 border border-green-700 text-green-800 font-semibold bg-green-200  rounded-md mr-3 h-7 cursor-pointer hover:bg-green-400/80">
-              Withdraw
-            </button>
-            <button className="w-28 border border-red-700 text-red-800 font-semibold bg-red-200 rounded-md cursor-pointer hover:bg-red-400/80">
-              Cancel
-            </button>
-          </div>
+          <button className={`${buttonStyle}`}>Withdraw</button>
+          {errorMessage && (
+            <p className="text-red-500 mt-5 text-sm font-normal">
+              {errorMessage}
+            </p>
+          )}
         </form>
       )}
     </div>

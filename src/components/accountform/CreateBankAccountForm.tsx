@@ -15,7 +15,7 @@ const CreateBankAccountForm = (props: Props) => {
   const inputStyles =
     "lg:h-10 h-8  lg:w-80 w-60 px-2 border border-zinc-200 text-gray-900 text-sm rounded-md outline-none focus:ring-cyan-500 focus:border-cyan-500";
 
-  const { setAccountDetails, accountDetails } = useBankAccount();
+  const { setBalance, setAccountDetails, accountDetails } = useBankAccount();
   const router = useRouter();
 
   const [accountHolder, setAccountHolder] = useState<string>("");
@@ -44,6 +44,7 @@ const CreateBankAccountForm = (props: Props) => {
     setCountry("");
     setCurrency("");
     setAccountNumber("");
+    setBalance(0);
   };
 
   return (

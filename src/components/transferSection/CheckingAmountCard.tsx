@@ -12,7 +12,7 @@ const CheckingAmountCard = (props: Props) => {
     <div className="bg-black/95 w-[30rem] h-[30rem] rounded-md p-4 shadow-lg mt-12">
       {" "}
       <p className="mt-6 text-lg font-semibold text-gray-300">
-        Checking Account
+        Bank Account Profile
       </p>
       <p className="mt-10 text-md font-normal text-gray-400">Balance</p>
       <p className="text-4xl text-cyan-600 font-mono tracking-wider font-medium mt-6 ">
