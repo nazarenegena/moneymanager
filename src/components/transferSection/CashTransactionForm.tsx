@@ -4,10 +4,11 @@ import { useState } from "react";
 import { useBankAccount } from "@/context/bankAccountContext";
 
 type Props = {
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   transactionType: string;
 };
 
-const CashTransactionForm = ({ transactionType }: Props) => {
+const CashTransactionForm = ({ transactionType, setIsOpen }: Props) => {
   const formStyles = "flex flex-col items-center justify-center h-48 w-80 ";
   const inputTitleStyle =
     "text-center text-gray-600 font-semibold tracking-wide";
@@ -15,7 +16,14 @@ const CashTransactionForm = ({ transactionType }: Props) => {
     "mt-6 px-5 text-center h-10 w-auto border border-zinc-200 text-gray-900 shadow-inner text-sm rounded-md outline-none focus:ring-cyan-500 focus:border-cyan-500";
   const buttonStyle =
     " mt-10 w-28 border border-green-700 text-green-800 font-semibold bg-green-200  rounded-md mr-3 h-7 cursor-pointer hover:bg-green-400/80";
-  const { balance, deposit, withdraw, setBalance } = useBankAccount();
+  const {
+    balance,
+    deposit,
+    withdraw,
+    setBalance,
+    transactions,
+    setTransactions,
+  } = useBankAccount();
   const [amount, setAmount] = useState<number>(0);
   const [errorMessage, setErrorMessage] = useState<string>("");
 
@@ -28,14 +36,37 @@ const CashTransactionForm = ({ transactionType }: Props) => {
     event.preventDefault();
     if (transactionType === "deposit") {
       deposit(amount);
+      const debitTransaction = {
+        recipient: "personal",
+        accountNumber: "KW81CBKU0000000000001234560101",
+        date: new Date().toDateString(),
+        amount: amount,
+        debit: true,
+        balance: balance + amount,
+      };
+      setTransactions([...transactions, debitTransaction]);
     } else if (transactionType === "withdraw") {
       if (amount <= balance) {
         withdraw(amount);
+        const creditTransaction = {
+          recipient: "personal",
+          accountNumber: "KW81CBKU0000000000001234560101",
+          date: new Date().toDateString(),
+          amount: amount,
+          debit: false,
+          balance: balance - amount,
+        };
+        setTransactions([...transactions, creditTransaction]);
       } else {
         setErrorMessage("Insufficient balance");
       }
     }
     setAmount(0);
+    const handleClose = () => {
+      setIsOpen(false);
+    };
+
+    handleClose();
   };
 
   return (

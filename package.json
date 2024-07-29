@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@tanstack/react-table": "^8.19.3",
+    "ibantools": "^4.5.1",
     "next": "14.2.5",
     "prop-types": "^15.8.1",
     "react": "^18",

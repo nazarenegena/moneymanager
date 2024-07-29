@@ -109,14 +109,13 @@ const columns = [
   }),
 ];
 
-const MainTransactionTable = (props: Props) => {
+const DashboardTransactionTable = (props: Props) => {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const { transactions, setTransactions } = useBankAccount();
   const [pagination, setPagination] = useState({
     pageIndex: 0,
-    pageSize: 8,
+    pageSize: 4,
   });
-
   const table = useReactTable({
     data: transactions,
     columns,
@@ -127,10 +126,12 @@ const MainTransactionTable = (props: Props) => {
     debugHeaders: true,
     debugColumns: false,
     filterFns: {},
+    onPaginationChange: setPagination,
     state: {
       columnFilters,
       pagination,
     },
+
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
     filterFromLeafRows: true,
@@ -168,7 +169,7 @@ const MainTransactionTable = (props: Props) => {
       <table className="w-full mt-12 ">
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
+            <tr key={headerGroup.id} className="">
               {headerGroup.headers.map((header) => (
                 <th
                   key={header.id}
@@ -280,7 +281,7 @@ const MainTransactionTable = (props: Props) => {
             table.setPageSize(Number(e.target.value));
           }}
         >
-          {[10, 20, 30, 40, 50].map((pageSize) => (
+          {[5, 10, 20, 30, 40, 50].map((pageSize) => (
             <option key={pageSize} value={pageSize}>
               Show {pageSize}
             </option>
@@ -290,7 +291,6 @@ const MainTransactionTable = (props: Props) => {
     </div>
   );
 };
-
 function Filter({ column }: { column: Column<any, unknown> }) {
   const columnFilterValue = column.getFilterValue();
   const { filterVariant } = column.columnDef.meta ?? {};
@@ -374,4 +374,5 @@ function DebouncedInput({
     />
   );
 }
-export default MainTransactionTable;
+
+export default DashboardTransactionTable;

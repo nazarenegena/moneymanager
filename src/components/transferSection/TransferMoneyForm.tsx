@@ -11,6 +11,9 @@ import {
 } from "react-country-state-city";
 
 import "react-country-state-city/dist/react-country-state-city.css";
+import * as ibantools from "ibantools";
+import { useBankAccount } from "@/context/bankAccountContext";
+/// <reference path="iban.d.ts" />
 
 type Props = {};
 
@@ -19,8 +22,17 @@ const TransferMoneyForm = (props: Props) => {
   const inputStyles =
     "lg:h-10 h-8  lg:w-96 w-60 px-2 border border-zinc-200 text-gray-900 shadow-inner text-sm rounded-md outline-none focus:ring-cyan-500 focus:border-cyan-500";
 
+  const [accountHolderName, setAccountHolderName] = useState<string>("");
+  const [amount, setAmount] = useState<number>(0);
   const [bankType, setBankType] = useState("");
+  const [accountNumber, setAccountNumber] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
+  const [transactionErrorMessage, setTransactionErrorMessage] =
+    useState<string>("");
+
+  const [ibanErrorMessage, setIbanErrorMessage] = useState<string>("");
+  const { transactions, setTransactions, balance, setBalance } =
+    useBankAccount();
 
   const handleBankTypeChange = (value: string) => {
     setBankType(value);
@@ -30,6 +42,48 @@ const TransferMoneyForm = (props: Props) => {
       setErrorMessage("");
     }
   };
+
+  const ibanAccounCheck = (value: string) => {
+    setAccountNumber(value);
+    try {
+      const result = ibantools.validateIBAN(value);
+      if (!result.valid) {
+        setIbanErrorMessage("not valid or remove spaces");
+      } else {
+        setIbanErrorMessage("");
+      }
+      console.log(`IBAN ${value} valid`);
+    } catch (error) {
+      setErrorMessage("Invalid IBAN format");
+    }
+    return true;
+  };
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+    if (accountHolderName && amount && accountNumber) {
+      const transaction = {
+        recipient: accountHolderName,
+        accountNumber: accountNumber,
+        date: new Date().toDateString(),
+        amount: amount,
+        debit: false,
+      };
+
+      if (amount && balance > amount) {
+        setTransactions([...transactions, transaction]);
+        setBalance(balance - amount);
+      } else {
+        setTransactionErrorMessage("insufficient balance, cant send");
+      }
+    } else {
+      console.log("not allowed");
+    }
+    setAccountHolderName("");
+    setAccountNumber("");
+    setAmount(0);
+    setBankType("");
+  };
+  console.log(transactions, "the transaction");
 
   return (
     <form className="flex flex-col lg:px-48 px-24 justify-center mt-10">
@@ -44,28 +98,11 @@ const TransferMoneyForm = (props: Props) => {
         id="accountholder"
         name="accountholder"
         className={`${inputStyles}`}
+        value={accountHolderName}
+        onChange={(e) => setAccountHolderName(e.target.value)}
         required
       />
-      <label htmlFor="country" className={`${labelStyles}`}>
-        Country
-      </label>
-      <input
-        type="text"
-        id="country"
-        name="country"
-        className={`${inputStyles}`}
-        required
-      />
-      <label htmlFor="currency" className={`${labelStyles}`}>
-        Currency
-      </label>
-      <input
-        type="text"
-        id="currency"
-        name="currency"
-        className={`${inputStyles}`}
-        required
-      />
+
       <div>
         <p className="mt-4 text-sm text-gray-700 mb-3 font-medium">
           Bank Account Type
@@ -128,14 +165,38 @@ const TransferMoneyForm = (props: Props) => {
         Account Number
       </label>
       <input
+        placeholder="BE68539007547034"
         type="text"
         id="accountnumber"
         name="accountnumber"
         className={`${inputStyles}`}
+        value={accountNumber}
+        onChange={(e) => ibanAccounCheck(e.target.value)}
         required
       />
-      <button className="bg-black/95 text-white text-md lg:h-10 h-8 lg:w-96 w-60 rounded-md mt-9 hover:bg-black/70 shadow-sm">
-        <Link href={"/dashboard"}> Create Account</Link>
+      {ibanErrorMessage && (
+        <p className="text-red-500 text-xs mt-2">{ibanErrorMessage}</p>
+      )}
+
+      <label htmlFor="bankname" className={`${labelStyles}`}>
+        Amount
+      </label>
+      <input
+        type="number"
+        id="amount"
+        name="amount"
+        onChange={(e) => setAmount(parseFloat(e.target.value))}
+        className={`${inputStyles}`}
+        required
+      />
+      {transactionErrorMessage && (
+        <p className="text-red-500 text-xs mt-2">{transactionErrorMessage}</p>
+      )}
+      <button
+        className="bg-black/95 text-white text-md lg:h-10 h-8 lg:w-96 w-60 rounded-md mt-9 hover:bg-black/70 shadow-sm"
+        onClick={handleSubmit}
+      >
+        Transfer
       </button>
     </form>
   );
