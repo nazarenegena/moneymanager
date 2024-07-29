@@ -12,6 +12,8 @@ import {
 
 import "react-country-state-city/dist/react-country-state-city.css";
 import * as ibantools from "ibantools";
+import { format } from "date-fns";
+
 import { useBankAccount } from "@/context/bankAccountContext";
 /// <reference path="iban.d.ts" />
 
@@ -64,9 +66,11 @@ const TransferMoneyForm = (props: Props) => {
       const transaction = {
         recipient: accountHolderName,
         accountNumber: accountNumber,
-        date: new Date().toDateString(),
+        date: format(new Date(), "yyyy-MM-dd HH:mm:ss a"),
         amount: amount,
         debit: false,
+        balance: balance - amount,
+        transactionType: "transfer",
       };
 
       if (amount && balance > amount) {

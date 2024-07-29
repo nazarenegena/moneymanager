@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useBankAccount } from "@/context/bankAccountContext";
+import { format } from "date-fns";
 
 type Props = {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -16,6 +17,7 @@ const CashTransactionForm = ({ transactionType, setIsOpen }: Props) => {
     "mt-6 px-5 text-center h-10 w-auto border border-zinc-200 text-gray-900 shadow-inner text-sm rounded-md outline-none focus:ring-cyan-500 focus:border-cyan-500";
   const buttonStyle =
     " mt-10 w-28 border border-green-700 text-green-800 font-semibold bg-green-200  rounded-md mr-3 h-7 cursor-pointer hover:bg-green-400/80";
+
   const {
     balance,
     deposit,
@@ -39,10 +41,11 @@ const CashTransactionForm = ({ transactionType, setIsOpen }: Props) => {
       const debitTransaction = {
         recipient: "personal",
         accountNumber: "KW81CBKU0000000000001234560101",
-        date: new Date().toDateString(),
+        date: format(new Date(), "yyyy-MM-dd HH:mm:ss a"),
         amount: amount,
         debit: true,
         balance: balance + amount,
+        transactionType: "deposit",
       };
       setTransactions([...transactions, debitTransaction]);
     } else if (transactionType === "withdraw") {
@@ -51,10 +54,11 @@ const CashTransactionForm = ({ transactionType, setIsOpen }: Props) => {
         const creditTransaction = {
           recipient: "personal",
           accountNumber: "KW81CBKU0000000000001234560101",
-          date: new Date().toDateString(),
+          date: format(new Date(), "yyyy-MM-dd HH:mm:ss a"),
           amount: amount,
           debit: false,
           balance: balance - amount,
+          transactionType: "withdraw",
         };
         setTransactions([...transactions, creditTransaction]);
       } else {

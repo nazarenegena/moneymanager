@@ -11,6 +11,11 @@ import {
   RowData,
   getPaginationRowModel,
   getSortedRowModel,
+  SortingFn,
+  SortingState,
+  getFacetedRowModel,
+  getFacetedUniqueValues,
+  getFacetedMinMaxValues,
 } from "@tanstack/react-table";
 
 import React, { useState } from "react";
@@ -27,6 +32,7 @@ export interface ITransaction {
   amount: number;
   debit: boolean;
   balance: number;
+  transactionType: string;
 }
 
 declare module "@tanstack/react-table" {
@@ -42,10 +48,10 @@ const columns = [
     cell: (info) => info.getValue(),
     footer: (info) => info.column.id,
     enableColumnFilter: false,
+    enableSorting: true,
   }),
   columnHelper.accessor("recipient", {
     header: () => "Name",
-    // cell: (info) => info.renderValue(),
     cell: ({ row: { original } }) => {
       return (
         <div className="flex  items-center mr-6">
@@ -60,7 +66,7 @@ const columns = [
       );
     },
     enableColumnFilter: false,
-
+    enableSorting: false,
     footer: (info) => info.column.id,
   }),
 
@@ -69,6 +75,7 @@ const columns = [
     cell: (info) => info.getValue(),
     footer: (info) => info.column.id,
     enableColumnFilter: false,
+    enableSorting: false,
   }),
 
   columnHelper.accessor("amount", {
@@ -76,27 +83,40 @@ const columns = [
     cell: ({ row: { original } }) => {
       return (
         <>
-          <div
-            className={`${
-              original.debit
-                ? "text-green-600 bg-green-100 rounded-full w-32 text-center py-1"
-                : "text-red-600 bg-red-100 rounded-full w-32 text-center py-1"
-            } font-semibold`}
-          >
-            $ {original.amount}
-          </div>
+          {original.debit ? (
+            <p className=" text-stat py-1">{original.amount}</p>
+          ) : (
+            <p className="text-start py-1">{original.amount}</p>
+          )}
         </>
       );
     },
     enableColumnFilter: false,
-
-    // meta: {
-    //   filterVariant: "range",
-    // },
-    // filterFn: "includesString",
     footer: (info) => info.column.id,
   }),
-
+  columnHelper.accessor("transactionType", {
+    header: () => "Transction Type",
+    cell: ({ row: { original } }) => {
+      return (
+        <>
+          {original.debit ? (
+            <p className="text-green-600 bg-green-100 rounded-full w-32 text-center py-1">
+              {original.transactionType}
+            </p>
+          ) : (
+            <p className="text-red-600 bg-red-100 rounded-full w-32 text-center py-1">
+              {original.transactionType}
+            </p>
+          )}
+        </>
+      );
+    },
+    enableColumnFilter: false,
+    meta: {
+      filterVariant: "select",
+    },
+    footer: (info) => info.column.id,
+  }),
   columnHelper.accessor("balance", {
     header: () => "Balance",
     cell: ({ row: { original } }) => {
@@ -116,6 +136,8 @@ const DashboardTransactionTable = (props: Props) => {
     pageIndex: 0,
     pageSize: 4,
   });
+  const [sorting, setSorting] = React.useState<SortingState>([]);
+
   const table = useReactTable({
     data: transactions,
     columns,
@@ -127,14 +149,16 @@ const DashboardTransactionTable = (props: Props) => {
     debugColumns: false,
     filterFns: {},
     onPaginationChange: setPagination,
+
     state: {
       columnFilters,
       pagination,
+      sorting,
     },
-
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
     filterFromLeafRows: true,
+    onSortingChange: setSorting,
   });
 
   return (
@@ -165,30 +189,64 @@ const DashboardTransactionTable = (props: Props) => {
           ])
         }
       />
+      <input
+        placeholder="search by date"
+        type="date"
+        onChange={(e) =>
+          setColumnFilters((prev) => [
+            ...prev,
+            {
+              id: "date",
+              value: e.target.value,
+            },
+          ])
+        }
+      />
+
+      <select
+        onChange={(e) =>
+          setColumnFilters((prev) => [
+            ...prev,
+            {
+              id: "transactionType",
+              value: e.target.value,
+            },
+          ])
+        }
+      >
+        <option value="">All</option>
+        <option value="deposit">Deposit</option>
+        <option value="withdraw">Withdrawals</option>
+        <option value="Transfer">Transfer</option>
+      </select>
       <p className="text-2xl  font-semibold text-gray-800 mb-2">Transactions</p>
       <table className="w-full mt-12 ">
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id} className="">
+            <tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
                 <th
                   key={header.id}
-                  className="text-gray-800 font-medium text-lg  py-6 "
+                  className="text-gray-800 font-medium text-lg  py-6 text-start"
                 >
-                  {header.column.getCanFilter() ? (
-                    <div>
-                      <Filter column={header.column} />
-                    </div>
-                  ) : null}
                   {header.isPlaceholder ? null : (
                     <>
                       <div
-                        {...{
-                          className: header.column.getCanSort()
+                        className={
+                          header.column.getCanSort()
                             ? "cursor-pointer select-none"
-                            : "",
-                          onClick: header.column.getToggleSortingHandler(),
-                        }}
+                            : ""
+                        }
+                        onClick={header.column.getToggleSortingHandler()}
+                        title={
+                          header.column.getCanSort()
+                            ? header.column.getNextSortingOrder() === "asc"
+                              ? "Sort ascending"
+                              : header.column.getNextSortingOrder() === "desc"
+                              ? "Sort descending"
+                              : "Clear sort"
+                            : undefined
+                        }
                       >
                         {flexRender(
                           header.column.columnDef.header,
@@ -199,11 +257,6 @@ const DashboardTransactionTable = (props: Props) => {
                           desc: " 🔽",
                         }[header.column.getIsSorted() as string] ?? null}
                       </div>
-                      {/* {header.column.getCanFilter() ? (
-                        <div>
-                          <Filter column={header.column} />
-                        </div>
-                      ) : null} */}
                     </>
                   )}
                 </th>
@@ -291,88 +344,5 @@ const DashboardTransactionTable = (props: Props) => {
     </div>
   );
 };
-function Filter({ column }: { column: Column<any, unknown> }) {
-  const columnFilterValue = column.getFilterValue();
-  const { filterVariant } = column.columnDef.meta ?? {};
-
-  return filterVariant === "range" ? (
-    <div>
-      <div className="flex space-x-2">
-        {/* See faceted column filters example for min max values functionality */}
-        <DebouncedInput
-          type="number"
-          value={(columnFilterValue as [number, number])?.[0] ?? ""}
-          onChange={(value) =>
-            column.setFilterValue((old: [number, number]) => [value, old?.[1]])
-          }
-          placeholder={`Min`}
-          className="w-24 border shadow rounded"
-        />
-        <DebouncedInput
-          type="number"
-          value={(columnFilterValue as [number, number])?.[1] ?? ""}
-          onChange={(value) =>
-            column.setFilterValue((old: [number, number]) => [old?.[0], value])
-          }
-          placeholder={`Max`}
-          className="w-24 border shadow rounded"
-        />
-      </div>
-      <div className="h-1" />
-    </div>
-  ) : filterVariant === "select" ? (
-    <select
-      onChange={(e) => column.setFilterValue(e.target.value)}
-      value={columnFilterValue?.toString()}
-    >
-      {/* See faceted column filters example for dynamic select options */}
-      <option value="">All</option>
-      <option value="receipient">Deposits</option>
-      <option value="accountNumber">Acc No</option>
-      <option value="debit">debit</option>
-    </select>
-  ) : (
-    <DebouncedInput
-      className="w-38 text-sm h-8 text-center border border-gray-200 inner-shadow rounded-full"
-      onChange={(value) => column.setFilterValue(value)}
-      placeholder={`Search...`}
-      type="text"
-      value={(columnFilterValue ?? "") as string}
-    />
-    // See faceted column filters example for datalist search suggestions
-  );
-}
-function DebouncedInput({
-  value: initialValue,
-  onChange,
-  debounce = 500,
-  ...props
-}: {
-  value: string | number;
-  onChange: (value: string | number) => void;
-  debounce?: number;
-} & Omit<React.InputHTMLAttributes<HTMLInputElement>, "onChange">) {
-  const [value, setValue] = React.useState(initialValue);
-
-  React.useEffect(() => {
-    setValue(initialValue);
-  }, [initialValue]);
-
-  React.useEffect(() => {
-    const timeout = setTimeout(() => {
-      onChange(value);
-    }, debounce);
-
-    return () => clearTimeout(timeout);
-  }, [value]);
-
-  return (
-    <input
-      {...props}
-      value={value}
-      onChange={(e) => setValue(e.target.value)}
-    />
-  );
-}
 
 export default DashboardTransactionTable;
