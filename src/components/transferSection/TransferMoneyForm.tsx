@@ -29,22 +29,18 @@ const TransferMoneyForm = (props: Props) => {
   const { transactions, setTransactions, balance, setBalance } =
     useBankAccount();
 
-  const ibanAccounCheck = (value: string) => {
-    try {
-      const result = ibantools.validateIBAN(value);
-      if (!result.valid) {
-        setIbanErrorMessage("not valid or remove spaces");
-      } else {
-        setIbanErrorMessage("");
-        setAccountNumber(value);
-      }
-    } catch (error) {
-      setErrorMessage("Invalid IBAN format");
-    }
-    return true;
+  const ibanAccountCheck = (value: string) => {
+    return ibantools.validateIBAN(value);
   };
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
+    console.log(ibanAccountCheck(accountNumber), "inab chec");
+
+    if (!ibanAccountCheck(accountNumber).valid) {
+      setIbanErrorMessage("Not a Valid IBAN account ");
+      return;
+    }
+
     if (accountHolderName && amount && accountNumber) {
       const transaction = {
         recipient: accountHolderName,
@@ -108,7 +104,7 @@ const TransferMoneyForm = (props: Props) => {
         name="accountnumber"
         className={`${inputStyles}`}
         value={accountNumber}
-        onChange={(e) => ibanAccounCheck(e.target.value)}
+        onChange={(e) => setAccountNumber(e.target.value)}
         required
       />
       {ibanErrorMessage && (

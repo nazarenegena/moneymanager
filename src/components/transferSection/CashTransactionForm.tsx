@@ -79,7 +79,7 @@ const CashTransactionForm = ({ transactionType, setIsOpen }: Props) => {
           <p className={`${inputTitleStyle}`}>Deposit Money</p>
           <input
             placeholder="enter amount"
-            type="text"
+            type="number"
             onChange={handleAmountChange}
             className={`${inputStyles}`}
           />
@@ -90,7 +90,7 @@ const CashTransactionForm = ({ transactionType, setIsOpen }: Props) => {
           <p className={`${inputTitleStyle}`}>Withdraw Money</p>
           <input
             placeholder="enter amount"
-            type="text"
+            type="number"
             onChange={handleAmountChange}
             className={`${inputStyles}`}
           />

@@ -328,7 +328,7 @@ const MainTransactionTable = (props: Props) => {
           ))}
         </tbody>
       </table>
-      <div className="h-4" />
+      <div className="h-4 mt-10" />
       <div className="flex justify-between gap-2">
         <div>
           <button

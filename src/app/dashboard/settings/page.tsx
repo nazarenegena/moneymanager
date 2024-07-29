@@ -1,3 +1,7 @@
 export default function Page() {
-  return <h1>the settings page</h1>;
+  return (
+    <div className="bg-white ml-2   rounded-md mt-4 flex justify-center items-center">
+      <p className="text-gray-300 font-bold text-2xl">Settings In Progress</p>
+    </div>
+  );
 }

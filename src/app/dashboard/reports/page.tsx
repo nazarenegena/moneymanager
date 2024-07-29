@@ -1,8 +1,7 @@
 export default function Page() {
   return (
-    <h1>
-      Search page that will have pop up modal to search then display your
-      different tables upon your search
-    </h1>
+    <div className="bg-white ml-2   rounded-md mt-4 flex justify-center items-center">
+      <p className="text-gray-300 font-bold text-2xl">Reports In Progress</p>
+    </div>
   );
 }

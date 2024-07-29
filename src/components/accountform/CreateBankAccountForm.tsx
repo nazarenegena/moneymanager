@@ -27,7 +27,7 @@ const CreateBankAccountForm = (props: Props) => {
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
 
-    if (accountHolder && country && currency && accountNumber) {
+    if (accountHolder && accountNumber) {
       setAccountDetails({
         accountHolder,
         country,
@@ -42,10 +42,7 @@ const CreateBankAccountForm = (props: Props) => {
 
     // Clear the form
     setAccountHolder("");
-    setCountry("");
-    setCurrency("");
     setAccountNumber("");
-    setErrorMessage("");
     setBalance(0);
   };
 
@@ -80,30 +77,6 @@ const CreateBankAccountForm = (props: Props) => {
           name="accountnumber"
           value={accountNumber}
           onChange={(e) => setAccountNumber(e.target.value)}
-          className={`${inputStyles}`}
-          required
-        />
-        <label htmlFor="country" className={`${labelStyles}`}>
-          Country
-        </label>
-        <input
-          type="text"
-          id="country"
-          name="country"
-          value={country}
-          onChange={(e) => setCountry(e.target.value)}
-          className={`${inputStyles}`}
-          required
-        />
-        <label htmlFor="currency" className={`${labelStyles}`}>
-          Currency
-        </label>
-        <input
-          type="text"
-          id="currency"
-          name="currency"
-          value={currency}
-          onChange={(e) => setCurrency(e.target.value)}
           className={`${inputStyles}`}
           required
         />
