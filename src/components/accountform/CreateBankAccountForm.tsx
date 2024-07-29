@@ -22,6 +22,7 @@ const CreateBankAccountForm = (props: Props) => {
   const [country, setCountry] = useState<string>("");
   const [currency, setCurrency] = useState<string>("");
   const [accountNumber, setAccountNumber] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
@@ -36,7 +37,7 @@ const CreateBankAccountForm = (props: Props) => {
 
       router.push("/dashboard");
     } else {
-      console.log("fill values");
+      setErrorMessage("fill all input fields");
     }
 
     // Clear the form
@@ -44,6 +45,7 @@ const CreateBankAccountForm = (props: Props) => {
     setCountry("");
     setCurrency("");
     setAccountNumber("");
+    setErrorMessage("");
     setBalance(0);
   };
 
@@ -105,7 +107,9 @@ const CreateBankAccountForm = (props: Props) => {
           className={`${inputStyles}`}
           required
         />
-
+        {errorMessage && (
+          <p className="text-red-500 text-xs mt-2">{errorMessage}</p>
+        )}{" "}
         <button
           onClick={handleSubmit}
           className="bg-black/95 text-white text-md lg:h-10 h-8 lg:w-80 w-60 rounded-md mt-9 hover:bg-cyan-600 shadow-sm focus:outline-none focus:ring-4 focus:ring-cyan-300"

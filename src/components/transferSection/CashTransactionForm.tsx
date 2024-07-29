@@ -33,7 +33,9 @@ const CashTransactionForm = ({ transactionType, setIsOpen }: Props) => {
     setAmount(parseFloat(event.target.value));
     setErrorMessage("");
   };
-
+  const handleClose = () => {
+    setIsOpen(false);
+  };
   const handleTransactionSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     if (transactionType === "deposit") {
@@ -48,6 +50,7 @@ const CashTransactionForm = ({ transactionType, setIsOpen }: Props) => {
         transactionType: "deposit",
       };
       setTransactions([...transactions, debitTransaction]);
+      handleClose();
     } else if (transactionType === "withdraw") {
       if (amount <= balance) {
         withdraw(amount);
@@ -61,16 +64,12 @@ const CashTransactionForm = ({ transactionType, setIsOpen }: Props) => {
           transactionType: "withdraw",
         };
         setTransactions([...transactions, creditTransaction]);
+        handleClose();
       } else {
         setErrorMessage("Insufficient balance");
       }
     }
     setAmount(0);
-    const handleClose = () => {
-      setIsOpen(false);
-    };
-
-    handleClose();
   };
 
   return (
