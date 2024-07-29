@@ -34,10 +34,9 @@ const TransferMoneyForm = (props: Props) => {
   };
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    console.log(ibanAccountCheck(accountNumber), "inab chec");
 
     if (!ibanAccountCheck(accountNumber).valid) {
-      setIbanErrorMessage("Not a Valid IBAN account ");
+      setIbanErrorMessage("Not a Valid IBAN account, check spaces or format ");
       return;
     }
 
