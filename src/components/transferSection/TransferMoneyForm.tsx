@@ -40,6 +40,8 @@ const TransferMoneyForm = (props: Props) => {
       return;
     }
 
+    setIbanErrorMessage("");
+
     if (accountHolderName && amount && accountNumber) {
       const transaction = {
         recipient: accountHolderName,

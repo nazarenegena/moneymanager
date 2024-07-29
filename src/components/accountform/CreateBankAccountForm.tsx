@@ -39,7 +39,6 @@ const CreateBankAccountForm = (props: Props) => {
     } else {
       setErrorMessage("fill all input fields");
     }
-
     // Clear the form
     setAccountHolder("");
     setAccountNumber("");
