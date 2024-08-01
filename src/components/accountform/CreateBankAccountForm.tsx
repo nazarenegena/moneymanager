@@ -59,6 +59,7 @@ const CreateBankAccountForm = (props: Props) => {
           Account Holder Name
         </label>
         <input
+          placeholder="enter name"
           type="text"
           id="accountholder"
           name="accountholder"
@@ -71,6 +72,7 @@ const CreateBankAccountForm = (props: Props) => {
           Account Number
         </label>
         <input
+          placeholder="BE68539007547034"
           type="text"
           id="accountnumber"
           name="accountnumber"
